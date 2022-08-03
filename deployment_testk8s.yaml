@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: testk8s
+#  namespace: devops-tools
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: testk8s
+  template:
+    metadata:
+      labels:
+        app: testk8s
+    spec:
+      containers:
+        - name: testk8s
+          image: localhost:5000/testk8s:Ale
+          resources:
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
+            requests:
+              memory: "500Mi"
+              cpu: "500m"
+          ports:
+            - name: testk8s-port
+              containerPort: 8080
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: testk8s
+#  namespace: devops-tools
+spec:
+  selector: 
+    app: testk8s
+  type: NodePort  
+  ports:
+    - name: testk8s-port
+      port: 8080
+      targetPort: 8080
+      nodePort: 30000
