@@ -5,7 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+//@PropertySource("file:/root/configmap.properties")
 @PropertySource("classpath:configmap.properties")
+//@PropertySource("file:C:/configmap.properties")
 @ConfigurationProperties(prefix = "k8s.configmap")
 @Configuration("appInfo")
 public class ConfigMapInfo {
