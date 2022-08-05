@@ -17,8 +17,7 @@ public class HelloWorldController {
 
     @RequestMapping("/")
     public String hello() {
-        System.out.println("Application.properties: " + name);
-        System.out.println("Configmap.properties: " + configMapInfo.getName());
-        return "Hello "+ configMapInfo.getName();
+        return "Hello ConfigMap: "+ configMapInfo.getName()+
+                "<br/>Hello Application.properties: "+name;
     }
 }  
