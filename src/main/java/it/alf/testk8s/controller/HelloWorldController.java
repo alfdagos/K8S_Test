@@ -1,5 +1,7 @@
 package it.alf.testk8s.controller;
 
+import it.alf.testk8s.ConfigMapInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -7,11 +9,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloWorldController {
 
-    @Value("${name}")
+    @Autowired
+    ConfigMapInfo configMapInfo;
+
+    @Value("${k8s.application.name}")
     private String name;
 
     @RequestMapping("/")
     public String hello() {
-        return "Hello "+name;
+        System.out.println("Application.properties: " + name);
+        System.out.println("Configmap.properties: " + configMapInfo.getName());
+        return "Hello "+ configMapInfo.getName();
     }
 }  
