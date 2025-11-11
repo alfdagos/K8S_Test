@@ -1,0 +1,48 @@
+name: Dependency Check
+
+on:
+  schedule:
+    - cron: '0 2 * * 1'  # Every Monday at 2 AM
+  workflow_dispatch:
+
+jobs:
+  dependency-check:
+    name: 🔍 Dependency Vulnerability Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+      
+    - name: ☕ Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+        
+    - name: 🔍 Run OWASP Dependency Check
+      uses: dependency-check/Dependency-Check_Action@main
+      with:
+        project: 'K8S_Test'
+        path: '.'
+        format: 'HTML,JSON,JUNIT'
+        
+    - name: 📤 Upload Test results
+      uses: actions/upload-artifact@v3
+      with:
+        name: dependency-check-report
+        path: reports/
+        
+    - name: 🚨 Create Issue for vulnerabilities
+      if: failure()
+      uses: actions/github-script@v6
+      with:
+        script: |
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: 'Security vulnerabilities detected in dependencies',
+            body: 'OWASP Dependency Check has detected security vulnerabilities. Please check the latest workflow run for details.',
+            labels: ['security', 'dependencies']
+          });
