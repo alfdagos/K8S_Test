@@ -1,12 +1,12 @@
 # Build stage
-FROM eclipse-temurin:17-jdk-alpine AS builder
+FROM eclipse-temurin:21-jdk-alpine AS builder
 WORKDIR /app
 COPY pom.xml .
 COPY src src
 RUN ./mvnw clean package -DskipTests
 
 # Runtime stage
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:21-jre-alpine
 LABEL maintainer="alf"
 LABEL description="Spring Boot K8s ConfigMap Demo Application"
 LABEL version="1.0.0"
